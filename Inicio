@@ -1,0 +1,18 @@
+RFID rfid(SS_PIN, RST_PIN);             
+
+LiquidCrystal lcd(6, 7, 5, 4, 3, 2);    
+
+const int solenoide = 8;                
+int serNum[5];                          
+
+int cards[][5] = {                      
+  {118, 157, 177, 171, 241},            
+  {240, 193, 247, 54, 240},             
+  {131, 95, 107, 154, 45}               
+};
+
+bool access = false;
+
+int alarm = 0;
+uint8_t alarmStat = 0;
+uint8_t maxError = 5;
