@@ -16,3 +16,21 @@ bool access = false;
 int alarm = 0;
 uint8_t alarmStat = 0;
 uint8_t maxError = 5;
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  SPI.begin();
+  rfid.init();
+
+  pinMode(solenoide, OUTPUT);
+  digitalWrite(solenoide, LOW);
+
+
+  lcd.setCursor (0, 0);
+  lcd.print(F(" Controle RFID"));
+  lcd.setCursor (0, 1);
+  lcd.print(F("   de Acesso"));
+  delay (3000);
+  lcd.clear();
+}
