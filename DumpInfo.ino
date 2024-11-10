@@ -22,6 +22,7 @@ void setup() {
   rfid.PCD_Init();
   lcd.init();
   lcd.backlight();
+  lcd.print("Acesse com cartao");
   Serial.println("Sistema de acesso inicializado.");
 }
 
@@ -123,7 +124,7 @@ void addNewCard() {
   }
 }
 
-// Função para verificar se o cartão é cadastrado
+// Função para verificar se o cartão é cadast rado
 bool verificaCartaoCadastrado(byte *uid) {
   for (int i = 0; i < totalCadastrados; i++) {
     if (compareUID(uid, uidsCadastrados[i], rfid.uid.size)) {
