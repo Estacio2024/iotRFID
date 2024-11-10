@@ -1,0 +1,35 @@
+import serial
+from datetime import datetime
+
+# Configuração da porta serial (ajuste 'COM3' para a porta do seu Arduino)
+porta_serial = 'COM3'  # Exemplo para Windows; em Linux, pode ser '/dev/ttyUSB0' ou similar
+baud_rate = 9600
+
+# Função para registrar o acesso em um arquivo txt
+def registrar_acesso(usuario):
+    horario = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    with open('acessos.txt', 'a') as arquivo:
+        arquivo.write(f"{horario} - {usuario}\n")
+    print(f"Acesso registrado: {horario} - {usuario}")
+
+# Função para ler a porta serial
+def monitorar_serial():
+    with serial.Serial(porta_serial, baud_rate, timeout=1) as ser:
+        print("Monitorando acessos...")
+        while True:
+            if ser.in_waiting > 0:
+                # Lê a linha enviada pelo Arduino
+                linha = ser.readline().decode('utf-8').strip()
+                
+                # Verifica se é uma mensagem de acesso conhecido
+                if "BEM-VINDO FELYPE" in linha:
+                    registrar_acesso("Felype")
+                elif "Modo Admin" in linha:
+                    registrar_acesso("Admin")
+                elif "Cartão cadastrado" in linha:
+                    registrar_acesso(f"Aluno {ser.readline().decode('utf-8').strip()}")
+                else:
+                    registrar_acesso("Desconhecido")
+
+if __name__ == "__main__":
+    monitorar_serial()
