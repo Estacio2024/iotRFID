@@ -1,0 +1,19 @@
+import serial
+import datetime
+
+# Configuração da porta serial
+arduino = serial.Serial('COM3', 9600)  # Substitua 'COM3' pela porta serial correta do seu Arduino
+
+def log_access():
+    with open('access_log.txt', 'a') as log_file:
+        while True:
+            if arduino.in_waiting > 0:
+                data = arduino.readline().decode('utf-8').strip()
+                if data == "Card Detected":
+                    now = datetime.datetime.now()
+                    log_message = f'Card detected at {now.strftime("%Y-%m-%d %H:%M:%S")}\n'
+                    print(log_message)
+                    log_file.write(log_message)
+
+if _name_ == "_main_":
+    log_access()
