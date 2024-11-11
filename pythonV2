@@ -1,0 +1,33 @@
+import serial
+import time
+
+porta_serial = 'COM3'  # Porta serial do Arduino confirmada como COM3
+baud_rate = 9600
+
+try:
+    # Conecta à porta serial
+    arduino = serial.Serial(porta_serial, baud_rate, timeout=1)
+    print("Conexão com Arduino estabelecida.")
+    time.sleep(2)  # Aguarda inicialização da comunicação serial
+except serial.SerialException as e:
+    print(f"Erro ao conectar à porta serial {porta_serial}: {e}")
+    exit()
+
+# Função para gravar no arquivo .txt
+def gravar_em_txt(mensagem):
+    with open("dados_cartoes.txt", "a") as arquivo:
+        arquivo.write(mensagem + "\n")
+    print(f"Mensagem '{mensagem}' salva em 'dados_cartoes.txt'.")
+
+# Loop principal para leitura e gravação
+try:
+    while True:
+        if arduino.in_waiting > 0:  # Verifica se há dados na porta serial
+            mensagem = arduino.readline().decode('utf-8').strip()  # Lê e decodifica
+            if mensagem:
+                print("Mensagem recebida:", mensagem)
+                gravar_em_txt(mensagem)
+except KeyboardInterrupt:
+    print("Encerrando programa.")
+finally:
+    arduino.close()
